@@ -86,8 +86,8 @@ func New(config LC.TuicServer, tunnel C.Tunnel, additions ...inbound.Addition) (
 		config.MaxUdpRelayPacketSize = 1500
 	}
 	maxDatagramFrameSize := config.MaxUdpRelayPacketSize + packetOverHead
-	if maxDatagramFrameSize > 1400 {
-		maxDatagramFrameSize = 1400
+	if maxDatagramFrameSize > 1500 {
+		maxDatagramFrameSize = 1500
 	}
 	config.MaxUdpRelayPacketSize = maxDatagramFrameSize - packetOverHead
 	quicConfig.MaxDatagramFrameSize = int64(maxDatagramFrameSize)
