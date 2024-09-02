@@ -213,6 +213,8 @@ func NewTuic(option TuicOption) (*Tuic, error) {
 		DisablePathMTUDiscovery:        option.DisableMTUDiscovery,
 		MaxDatagramFrameSize:           int64(option.MaxDatagramFrameSize),
 		EnableDatagrams:                true,
+		MaxIncomingUniStreams:   1 << 60,
+		MaxIncomingStreams:    1 << 60,
 	}
 	if option.ReceiveWindowConn == 0 {
 		quicConfig.InitialStreamReceiveWindow = tuic.DefaultStreamReceiveWindow / 10
