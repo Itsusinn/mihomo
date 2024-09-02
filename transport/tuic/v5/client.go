@@ -33,7 +33,6 @@ type ClientOption struct {
 	CongestionController  string
 	ReduceRtt             bool
 	MaxUdpRelayPacketSize int
-	MaxOpenStreams        int64
 	CWND                  int
 }
 
@@ -291,11 +290,7 @@ func (t *clientImpl) DialContextWithDialer(ctx context.Context, metadata *C.Meta
 	if err != nil {
 		return nil, err
 	}
-	openStreams := t.openStreams.Add(1)
-	if openStreams >= t.MaxOpenStreams {
-		t.openStreams.Add(-1)
-		return nil, common.TooManyOpenStreams
-	}
+
 	stream, err := func() (stream net.Conn, err error) {
 		defer func() {
 			t.deferQuicConn(quicConn, err)
@@ -341,11 +336,6 @@ func (t *clientImpl) ListenPacketWithDialer(ctx context.Context, metadata *C.Met
 	quicConn, err := t.getQuicConn(ctx, dialer, dialFn)
 	if err != nil {
 		return nil, err
-	}
-	openStreams := t.openStreams.Add(1)
-	if openStreams >= t.MaxOpenStreams {
-		t.openStreams.Add(-1)
-		return nil, common.TooManyOpenStreams
 	}
 
 	pipe1, pipe2 := N.Pipe()
